@@ -1,0 +1,22 @@
+# Versions of the libyal dependencies used to build the Cyber Triage msiecfexport.
+#
+# synclibs.sh and synclibs.ps1 check out these tags instead of the latest tag,
+# and .github/workflows/ct_release.yml checks out vstools at this commit.
+# Change a version deliberately, in its own commit.
+#
+# <name> <tag or commit>
+libbfio 20260623
+libcdata 20260703
+libcerror 20260703
+libcfile 20260704
+libclocale 20260703
+libcnotify 20260703
+libcpath 20260703
+libcsplit 20260703
+libcthreads 20260703
+libfdatetime 20260521
+libfguid 20260521
+libfole 20260521
+libfvalue 20260531
+libuna 20260602
+vstools ca34108520e1fefa9b4933d30b86e0cbb41041a2

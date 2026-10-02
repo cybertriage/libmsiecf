@@ -16,6 +16,21 @@ $WinBison = "..\win_flex_bison\win_bison.exe"
 
 $Result = 0
 
+# Cyber Triage: tags pinned in ct\dependencies.txt are used instead of the latest tag.
+$PinnedTags = @{}
+
+If (Test-Path -Path "ct\dependencies.txt")
+{
+	ForEach (${Line} in Get-Content -Path "ct\dependencies.txt")
+	{
+		$Fields = (${Line} -Replace "#.*$","").Trim() -Split "\s+"
+
+		If (${Fields}.Count -ge 2)
+		{
+			$PinnedTags[${Fields}[0]] = ${Fields}[1]
+		}
+	}
+}
 ForEach (${LocalLib} in ${LocalLibs})
 {
 	# Split will return an array of a single empty string when LocalLibs is empty.
@@ -40,17 +55,30 @@ ForEach (${LocalLib} in ${LocalLibs})
 	}
 	Push-Location "${LocalLib}-${pid}"
 
+	$CheckoutFailed = $false
+
 	Try
 	{
 		$Output = Invoke-Expression -Command "${Git} fetch --quiet --all --tags --prune 2>&1"
 
 		$LatestTag = Invoke-Expression -Command "${Git} tag --sort=-v:refname 2>&1" | Select-Object -First 1
 
+		If (${PinnedTags}.ContainsKey(${LocalLib}))
+		{
+			$LatestTag = ${PinnedTags}[${LocalLib}]
+		}
 		If (${LatestTag} -and -not ${UseHead})
 		{
 			Write-Host "Synchronizing: ${LocalLib} from ${GitUrl} tag ${LatestTag}"
 
 			$Output = Invoke-Expression -Command "${Git} checkout --quiet tags/${LatestTag} 2>&1"
+
+			If (${LASTEXITCODE} -ne 0)
+			{
+				Write-Host ${Output}
+
+				$CheckoutFailed = $true
+			}
 		}
 		Else
 		{
@@ -60,6 +88,14 @@ ForEach (${LocalLib} in ${LocalLibs})
 	Finally
 	{
 		Pop-Location
+	}
+	If (${CheckoutFailed})
+	{
+		Write-Warning "Unable to check out: ${LocalLib} tag ${LatestTag}"
+
+		Remove-Item -Path ${LocalLib}-${pid} -Force -Recurse
+
+		Exit 1
 	}
 	$LocalLibVersion = Get-Content -Path ${LocalLib}-${pid}\configure.ac |
 		select -skip 4 -first 1 |

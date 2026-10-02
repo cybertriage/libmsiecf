@@ -30,11 +30,25 @@ do
 
     LATEST_TAG=$(cd "${LOCAL_LIB}-$$" && git tag --sort=-v:refname | head -n 1)
 
+    # Cyber Triage: use the tag pinned in ct/dependencies.txt, if there is one.
+    PINNED_TAG=$(awk -v name="${LOCAL_LIB}" '{ sub(/\r$/, "") } $1 == name { print $2 }' ct/dependencies.txt 2>/dev/null)
+
+    if [ -n "${PINNED_TAG}" ]
+    then
+        LATEST_TAG="${PINNED_TAG}"
+    fi
     if [ -n "${LATEST_TAG}" ] && [ "$1" != "--use-head" ]
     then
         echo "Synchronizing: ${LOCAL_LIB} from ${GIT_URL} tag ${LATEST_TAG}"
 
-        (cd "${LOCAL_LIB}-$$" && git checkout --quiet "tags/${LATEST_TAG}")
+        if ! (cd "${LOCAL_LIB}-$$" && git checkout --quiet "tags/${LATEST_TAG}")
+        then
+            echo "Unable to check out: ${LOCAL_LIB} tag ${LATEST_TAG}"
+
+            IFS=$OLDIFS
+
+            exit ${EXIT_FAILURE}
+        fi
     else
         echo "Synchronizing: ${LOCAL_LIB} from ${GIT_URL} HEAD"
     fi
