@@ -1638,6 +1638,12 @@ int export_handle_export_items(
 		     &item,
 		     error ) != 1 )
 		{
+			fprintf(
+			 export_handle->notify_stream,
+			 "Unable to retrieve item %d out of %d.\n\n",
+			 item_iterator,
+			 number_of_items );
+
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
@@ -1646,7 +1652,16 @@ int export_handle_export_items(
 			 function,
 			 item_iterator );
 
-			return( -1 );
+			if( ( error != NULL )
+			 && ( *error != NULL ) )
+			{
+				libcnotify_print_error_backtrace(
+				 *error );
+			}
+			libcerror_error_free(
+			 error );
+
+			continue;
 		}
 		if( export_handle_export_item(
 		     export_handle,
@@ -1747,6 +1762,12 @@ int export_handle_export_recovered_items(
 		     &recovered_item,
 		     error ) != 1 )
 		{
+			fprintf(
+			 export_handle->notify_stream,
+			 "Unable to retrieve recovered item %d out of %d.\n\n",
+			 recovered_item_iterator,
+			 number_of_recovered_items );
+
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
@@ -1755,7 +1776,16 @@ int export_handle_export_recovered_items(
 			 function,
 			 recovered_item_iterator );
 
-			return( -1 );
+			if( ( error != NULL )
+			 && ( *error != NULL ) )
+			{
+				libcnotify_print_error_backtrace(
+				 *error );
+			}
+			libcerror_error_free(
+			 error );
+
+			continue;
 		}
 		if( export_handle_export_item(
 		     export_handle,
