@@ -1671,7 +1671,7 @@ int export_handle_export_items(
 		{
 			fprintf(
 			 export_handle->notify_stream,
-			 "Unable to export item %d out of %d.\n",
+			 "\nUnable to export item %d out of %d.\n\n",
 			 item_iterator,
 			 number_of_items );
 
@@ -1795,7 +1795,7 @@ int export_handle_export_recovered_items(
 		{
 			fprintf(
 			 export_handle->notify_stream,
-			 "Unable to export recovered item %d out of %d.\n",
+			 "\nUnable to export recovered item %d out of %d.\n\n",
 			 recovered_item_iterator,
 			 number_of_recovered_items );
 
