@@ -115,7 +115,7 @@ int main( int argc, char * const argv[] )
 		{ 'c', "codepage", "codepage of ASCII strings, options: ascii, windows-874, windows-932, windows-936, windows-949, windows-950, windows-1250, windows-1251, windows-1252 (default), windows-1253, windows-1254, windows-1255, windows-1256, windows-1257 or windows-1258" },
 		{ 'h', NULL, "shows this help" },
 		{ 'l', "log_file", "logs information about the exported items" },
-		{ 'l', "mode", "export mode, option: all, items (default), recovered. 'all' exports the (allocated) items and recovered items, 'items' exports the (allocated) items and 'recovered' exports the recovered items" },
+		{ 'm', "mode", "export mode, option: all, items (default), recovered. 'all' exports the (allocated) items and recovered items, 'items' exports the (allocated) items and 'recovered' exports the recovered items" },
 		{ 'v', NULL, "verbose output to stderr" },
 		{ 'V', NULL, "print version" },
 		{ 0, "source", "the source file" },
